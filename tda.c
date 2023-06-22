@@ -129,6 +129,7 @@ int pokemones_en_hospital(struct hospitales *hospitales)
 	if (!hospitales)
 		return ERROR;
 
+	printf("\n");
 	printf("Nombres de todos los Pokemones del Hospital\n");
 	for (size_t i = 0;
 	     i < hospitales->hospitales_creados[hospitales->valor_actual]
@@ -235,6 +236,26 @@ int activar_hospital(struct hospitales *hospitales)
 	}
 
 	hospitales->valor_actual = (size_t)valor_hospital;
+
+	return EXITO;
+}
+
+int liberar_memoria(struct hospitales *hospitales)
+{
+	if (!hospitales)
+		return ERROR;
+
+	if (hospitales->cant_hospitales > 0) {
+		for (size_t i = 0; i < hospitales->cant_hospitales; i++) {
+			if (hospitales->hospitales_creados[i] != NULL) {
+				hospital_destruir(
+					hospitales->hospitales_creados[i]);
+			}
+		}
+	}
+
+	free(hospitales->hospitales_creados);
+	free(hospitales);
 
 	return EXITO;
 }

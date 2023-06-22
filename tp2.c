@@ -9,9 +9,6 @@
 
 int main()
 {
-	//Crear menu
-	//Mostrar menu
-	//Interactuar con el usuario
 	struct hospitales *hospitales = malloc(sizeof(struct hospitales));
 	if (!hospitales)
 		return ERROR;
@@ -32,10 +29,12 @@ int main()
 		menu_usuario(hospitales);
 		printf("Ingrese una opcion valida: ");
 		scanf(" %c", &desicion_usuario);
+		system("clear");
 
 		if (desicion_usuario == 's' || desicion_usuario == 'S') {
 			usuario_eligio_salir = true;
 		} else if (desicion_usuario == 'h' || desicion_usuario == 'H') {
+			printf("\n");
 			ayuda_usuario();
 		} else if (desicion_usuario == 'c' || desicion_usuario == 'C') {
 			char nombre_hospital[50];
@@ -51,21 +50,32 @@ int main()
 				id_hospital++;
 			}
 		} else if (desicion_usuario == 'e' || desicion_usuario == 'E') {
-			hospitales_activos(hospitales);
+			printf("\n");
+			if (hospitales->cant_hospitales == 0) {
+				printf("No hay ningun hospital cargado!");
+			} else if (hospitales->cant_hospitales > 0) {
+				hospitales_activos(hospitales);
+			}
 		} else if (desicion_usuario == 'a' || desicion_usuario == 'A') {
-			if (hospitales->cant_hospitales > 0)
+			printf("\n");
+			if (hospitales->cant_hospitales > 0) {
 				activar_hospital(hospitales);
+			} else if (hospitales->cant_hospitales == 0) {
+				printf("No hay ningun hospital disponible para activar!");
+			}
 
 		} else if (desicion_usuario == 'm' || desicion_usuario == 'M') {
 			if (hospitales->cant_hospitales > 0) {
 				pokemones_en_hospital(hospitales);
 			} else if (hospitales->cant_hospitales == 0) {
+				printf("\n");
 				printf("No hay ningun hospital disponible para mostrar!");
 			}
 		} else if (desicion_usuario == 'l' || desicion_usuario == 'L') {
 			if (hospitales->cant_hospitales > 0) {
 				lista_pokemones(hospitales);
 			} else if (hospitales->cant_hospitales == 0) {
+				printf("\n");
 				printf("No hay ningun hospital disponible para mostrar!");
 			}
 		} else if (desicion_usuario == 'd' || desicion_usuario == 'D') {
@@ -75,19 +85,7 @@ int main()
 		printf("\n");
 	}
 
-	//Liberar memoria
-
-	if (hospitales->cant_hospitales > 0) {
-		for (size_t i = 0; i < hospitales->cant_hospitales; i++) {
-			if (hospitales->hospitales_creados[i] != NULL) {
-				hospital_destruir(
-					hospitales->hospitales_creados[i]);
-			}
-		}
-	}
-
-	free(hospitales->hospitales_creados);
-	free(hospitales);
+	liberar_memoria(hospitales);
 
 	return EXITO;
 }
