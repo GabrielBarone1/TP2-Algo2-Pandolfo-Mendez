@@ -205,7 +205,7 @@ int destruir_hospital(struct hospitales *hospitales)
 		}
 	}
 
-	hospitales->valor_actual = valor_hospital;
+	hospitales->valor_actual = (size_t)valor_hospital;
 
 	return EXITO;
 }
