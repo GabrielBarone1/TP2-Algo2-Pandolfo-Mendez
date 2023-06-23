@@ -261,6 +261,7 @@ int activar_hospital(struct hospitales *hospitales)
 
 	bool id_encontrado = false;
 	int valor_hospital;
+	size_t nueva_posicion;
 
 	while (id_encontrado == false) {
 		printf("Ingrese que hospital quiere activar: ");
@@ -269,6 +270,7 @@ int activar_hospital(struct hospitales *hospitales)
 			if (hospitales->hospitales_creados[i]->numero_id ==
 			    valor_hospital) {
 				id_encontrado = true;
+				nueva_posicion = i;
 			}
 		}
 
@@ -278,7 +280,7 @@ int activar_hospital(struct hospitales *hospitales)
 	}
 
 	printf("El hospital con ID %i esta activo!\n", valor_hospital);
-	hospitales->valor_actual = (size_t)valor_hospital;
+	hospitales->valor_actual = nueva_posicion;
 
 	return EXITO;
 }
