@@ -60,10 +60,10 @@ En la funcion hospital_a_cada_pokemon iriamos iterando hasta el final de la list
  Se iria llamando a la funcion de quitar nodo eliminando siempre el ultimo de la lista hasta que no quede ninguno.
  Eliminar el nodo del final tiene complejidad O(1), pero al hacerlo con toda la lista, haciendo una iteracion hasta que no quede ningun elemento, la complejidad final seria O(n).
 
-El vector dinamico de pokemones se podria reemplazara tambien con un arbol binario de busqueda.
+El vector dinamico de pokemones se podria reemplazar tambien con un arbol binario de busqueda.
 Al crearse el hospital se iria insertando los pokemones en el arbol con una funcion comparadora a elegir(se podria ordenar por id, o por salud, o por la primera letra del nombre del pokemon). La complejidad de insertar en un arbol binario en general es O(log(n)), en el peor de los casos es O(n). 
 
-Pero eventualmente al tener el arbol de pokemones se debe ordenar por su salud. Podriamos crear un vector para almacenar la salud de los pokemones y hacer un recorrido INORDEN del arbol 
+Pero eventualmente al tener el arbol de pokemones se debe ordenar por su salud. Podriamos crear un vector para almacenar los pokemones en orden de salud haciendo un recorrido INORDEN del arbol 
 para insertar en un arbol nuevo y que quede todo ordenado. La complejidad del recorrido inorden seria O(n) ya que tendriamos que recorrer cada nodo del arbol para guardarlo en un vector.
 
 En hospital_aceptar_emergencias se podrian insertar los pokemones nuevos, hacer un recorrido inorden nuevo para determinar la prioridad de la salud de cada pokemon y volver a insertar en un arbol quedando 
