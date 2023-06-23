@@ -59,3 +59,21 @@ En la funcion hospital_a_cada_pokemon iriamos iterando hasta el final de la list
  En la funcion hospital_destruir al ser una lista, deberiamos hacer una llamada a lista_quitar con todos los nodos, liberando la memoria de cada uno.
  Se iria llamando a la funcion de quitar nodo eliminando siempre el ultimo de la lista hasta que no quede ninguno.
  Eliminar el nodo del final tiene complejidad O(1), pero al hacerlo con toda la lista, haciendo una iteracion hasta que no quede ningun elemento, la complejidad final seria O(n).
+
+El vector dinamico de pokemones se podria reemplazara tambien con un arbol binario de busqueda.
+Al crearse el hospital se iria insertando los pokemones en el arbol con una funcion comparadora a elegir(se podria ordenar por id, o por salud, o por la primera letra del nombre del pokemon). La complejidad de insertar en un arbol binario en general es O(log(n)), en el peor de los casos es O(n). 
+
+Pero eventualmente al tener el arbol de pokemones se debe ordenar por su salud. Podriamos crear un vector para almacenar la salud de los pokemones y hacer un recorrido INORDEN del arbol 
+para insertar en un arbol nuevo y que quede todo ordenado. La complejidad del recorrido inorden seria O(n) ya que tendriamos que recorrer cada nodo del arbol para guardarlo en un vector.
+
+En hospital_aceptar_emergencias se podrian insertar los pokemones nuevos, hacer un recorrido inorden nuevo para determinar la prioridad de la salud de cada pokemon y volver a insertar en un arbol quedando 
+asi ordenado. Ahora al volver a tener un vector que su salud va de menor a mayor, al insertar todos los pokemones de vuelta nos quedaria un arbol en forma de lista. La complejidad de esta nueva insercion seria O(n).
+
+En la funcion hospital_obtener_pokemon ahora, con nuestro nuevo arbol en forma de lista, tendriamos que tener un contador que empieze en 0 y vaya iterando hasta que sea igual a la prioridad(que comienza en 0).
+Esta operacion seria O(n) porque estamos recorriendo el arbol en forma de lista.
+
+En la funcion hospital_a_cada_pokemon iriamos iterando por el arbol metiendo cada nodo en la funcion. La complejidad seria O(n).
+
+Y en la funcion destruir_hospital, al tener el arbol en forma de lista, destruirlo tendria la complejidad O(n).
+
+Si se implementara la estructura pokemones con una estructura distinta a un vector dinamico(como por ejemplo la lista o el arbol), las pruebas deberian cambiar y adaptarse al nuevo TDA propuesto.
