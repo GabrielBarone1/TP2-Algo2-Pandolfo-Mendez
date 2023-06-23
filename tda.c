@@ -9,11 +9,50 @@
 #define ERROR -1
 #define EXITO 0
 
-struct hospitales {
+typedef struct hospitales {
 	size_t cant_hospitales;
 	size_t valor_actual;
 	hospital_t **hospitales_creados;
-};
+	int asignar_id_hospital;
+} hospital_general_t;
+
+typedef struct menu {
+	char desicion_usuario;
+	struct hospitales *hospital_general;
+	bool programa_finalizado;
+} menu_t;
+
+menu_t *crear_menu(struct hospitales *hospital_general)
+{
+	if (!hospital_general)
+		return NULL;
+
+	menu_t *menu = malloc(sizeof(menu_t));
+	if (!menu)
+		return NULL;
+
+	menu->hospital_general = hospital_general;
+	menu->programa_finalizado = false;
+
+	return menu;
+}
+
+struct hospitales *crear_hospital_general()
+{
+	struct hospitales *hospitales = malloc(sizeof(struct hospitales));
+	if (!hospitales)
+		return NULL;
+	hospitales->hospitales_creados = malloc(sizeof(hospital_t));
+	if (!hospitales->hospitales_creados) {
+		free(hospitales);
+		return NULL;
+	}
+	hospitales->cant_hospitales = 0;
+	hospitales->valor_actual = 0;
+	hospitales->asignar_id_hospital = 0;
+
+	return hospitales;
+}
 
 int menu_usuario(struct hospitales *hospitales)
 {
@@ -189,6 +228,7 @@ int destruir_hospital(struct hospitales *hospitales)
 
 	bool id_encontrado = false;
 	int valor_hospital;
+	size_t nueva_posicion;
 
 	if (hospitales->cant_hospitales > 0) {
 		while (id_encontrado == false) {
@@ -199,6 +239,7 @@ int destruir_hospital(struct hospitales *hospitales)
 				if (hospitales->hospitales_creados[i]
 					    ->numero_id == valor_hospital) {
 					id_encontrado = true;
+					nueva_posicion = i;
 				}
 			}
 
@@ -206,7 +247,8 @@ int destruir_hospital(struct hospitales *hospitales)
 				printf("Ingrese un ID de un hospital valido\n");
 			}
 		}
-		hospitales->valor_actual = (size_t)valor_hospital;
+		printf("El hospital con ID %i esta activo!\n", valor_hospital);
+		hospitales->valor_actual = nueva_posicion;
 	}
 
 	return EXITO;
@@ -235,14 +277,15 @@ int activar_hospital(struct hospitales *hospitales)
 		}
 	}
 
+	printf("El hospital con ID %i esta activo!\n", valor_hospital);
 	hospitales->valor_actual = (size_t)valor_hospital;
 
 	return EXITO;
 }
 
-int liberar_memoria(struct hospitales *hospitales)
+int menu_liberar_memoria(struct hospitales *hospitales, menu_t *menu)
 {
-	if (!hospitales)
+	if (!hospitales || !menu)
 		return ERROR;
 
 	if (hospitales->cant_hospitales > 0) {
@@ -256,6 +299,72 @@ int liberar_memoria(struct hospitales *hospitales)
 
 	free(hospitales->hospitales_creados);
 	free(hospitales);
+	free(menu);
 
 	return EXITO;
+}
+
+bool ejecutar_opcion(menu_t *menu, char desicion_usuario)
+{
+	if (!menu)
+		return true;
+
+	system("clear");
+
+	if (desicion_usuario == 's' || desicion_usuario == 'S') {
+		menu->programa_finalizado = true;
+
+	} else if (desicion_usuario == 'h' || desicion_usuario == 'H') {
+		printf("\n");
+		ayuda_usuario();
+	} else if (desicion_usuario == 'c' || desicion_usuario == 'C') {
+		char nombre_hospital[50];
+		printf("Ingrese el nombre del archivo: ");
+		scanf(" %s", nombre_hospital);
+
+		int resultado_crear = crear_hospital(
+			menu->hospital_general,
+			menu->hospital_general->asignar_id_hospital,
+			nombre_hospital);
+
+		if (resultado_crear == ERROR) {
+			printf("Hubo un error al cargar el archivo, asegurese que sea valido\n");
+		} else if (resultado_crear == EXITO) {
+			menu->hospital_general->asignar_id_hospital += 1;
+		}
+	} else if (desicion_usuario == 'e' || desicion_usuario == 'E') {
+		printf("\n");
+		if (menu->hospital_general->cant_hospitales == 0) {
+			printf("No hay ningun hospital cargado!\n");
+		} else if (menu->hospital_general->cant_hospitales > 0) {
+			hospitales_activos(menu->hospital_general);
+		}
+	} else if (desicion_usuario == 'a' || desicion_usuario == 'A') {
+		printf("\n");
+		if (menu->hospital_general->cant_hospitales > 0) {
+			activar_hospital(menu->hospital_general);
+		} else if (menu->hospital_general->cant_hospitales == 0) {
+			printf("No hay ningun hospital disponible para activar!\n");
+		}
+
+	} else if (desicion_usuario == 'm' || desicion_usuario == 'M') {
+		if (menu->hospital_general->cant_hospitales > 0) {
+			pokemones_en_hospital(menu->hospital_general);
+		} else if (menu->hospital_general->cant_hospitales == 0) {
+			printf("\n");
+			printf("No hay ningun hospital disponible para mostrar!\n");
+		}
+	} else if (desicion_usuario == 'l' || desicion_usuario == 'L') {
+		if (menu->hospital_general->cant_hospitales > 0) {
+			lista_pokemones(menu->hospital_general);
+		} else if (menu->hospital_general->cant_hospitales == 0) {
+			printf("\n");
+			printf("No hay ningun hospital disponible para mostrar!\n");
+		}
+	} else if (desicion_usuario == 'd' || desicion_usuario == 'D') {
+		destruir_hospital(menu->hospital_general);
+		printf("\n");
+	}
+
+	return menu->programa_finalizado;
 }
