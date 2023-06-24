@@ -58,7 +58,7 @@ la complejidad va a ser O(n).
 En la funcion hospital_a_cada_pokemon iriamos iterando hasta el final de la lista cada nodo e iriamos pasando por la funcion el nodo actual. Como iterariamos la lista completa(o hasta que la funcion
  devuelva false) La complejidad seria O(n).
 
- En la funcion hospital_destruir al ser una lista, deberiamos hacer una llamada a lista_quitar con todos los nodos, liberando la memoria de cada uno.
+ En la funcion hospital_destruir, al ser una lista, deberiamos hacer una llamada a lista_quitar con todos los nodos, liberando la memoria de cada uno.
  Se iria llamando a la funcion de quitar nodo eliminando siempre el ultimo de la lista hasta que no quede ninguno.
  Eliminar el nodo del final tiene complejidad O(1), pero al hacerlo con toda la lista, haciendo una iteracion hasta que no quede ningun elemento, la complejidad final seria O(n).
 
