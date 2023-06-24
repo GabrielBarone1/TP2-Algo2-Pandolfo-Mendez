@@ -41,7 +41,7 @@ Hospitales disponibles a probar en el programa: "ejemplos/grande.txt" y "ejemplo
 El vector dinamico de pokemones del tp1 podria reemplazarse con una lista simplemente enlazada.
 Cuando se crea el hospital se ordenan los pokemones por salud, asi que, se tendria que cambiar la funcion de ordenar_pokemones. 
 
-Se podria iterar toda la lista y guardar los pokemones en un vector auxiliar para aplicar el ordenamiento y se volver a insertar ya los pokemones de manera
+Se podria iterar toda la lista y guardar los pokemones en un vector auxiliar para aplicar el ordenamiento y volver a insertar ya los pokemones de manera
 ordenada. La operacion del bubble sort para ordenar por salud de menor a mayor seria O(n^2).
 
 En la funcion hospital_crear_desde_archivo con una lista, los pokemones se irian insertando al final de la lista como pasa con un vector dinamico. La operacion al insertar al final de la lista
