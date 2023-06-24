@@ -57,7 +57,7 @@ struct hospitales *crear_hospital_general()
 	return hospitales;
 }
 
-bool menu_usuario(void *contexto)
+int menu_usuario(void *contexto)
 {
 	struct hospitales *hospitales = contexto;
 
@@ -87,7 +87,7 @@ bool menu_usuario(void *contexto)
 	return EXITO;
 }
 
-bool ayuda_usuario()
+int ayuda_usuario(void *contexto)
 {
 	printf("Los comandos disponibles son:\n");
 	printf("- H (ayuda/help): Muestra un menú de ayuda con los comandos disponibles.\n");
@@ -99,7 +99,7 @@ bool ayuda_usuario()
 	printf("- D (destruir): Destruye el hospital activo.\n");
 	printf("- S (salir/exit): Sale del programa (obviamente que libera toda la memoria).\n");
 
-	return true;
+	return EXITO;
 }
 
 int crear_hospital(struct hospitales *hospitales, int id_hospital,
@@ -134,7 +134,7 @@ int crear_hospital(struct hospitales *hospitales, int id_hospital,
 	return EXITO;
 }
 
-bool lista_pokemones(void *contexto)
+int lista_pokemones(void *contexto)
 {
 	struct hospitales *hospitales = contexto;
 
@@ -170,7 +170,7 @@ bool lista_pokemones(void *contexto)
 	return EXITO;
 }
 
-bool pokemones_en_hospital(void *contexto)
+int pokemones_en_hospital(void *contexto)
 {
 	struct hospitales *hospitales = contexto;
 
@@ -192,7 +192,7 @@ bool pokemones_en_hospital(void *contexto)
 	return EXITO;
 }
 
-bool hospitales_activos(void *contexto)
+int hospitales_activos(void *contexto)
 {
 	struct hospitales *hospitales = contexto;
 
@@ -204,8 +204,7 @@ bool hospitales_activos(void *contexto)
 	for (size_t i = 0; i < hospitales->cant_hospitales; i++) {
 		printf("Nombre Hospital: %s",
 		       hospitales->hospitales_creados[i]->nombre_archivo);
-		if (hospitales->hospitales_creados[i]->numero_id ==
-		    hospitales->valor_actual) {
+		if (i == hospitales->valor_actual) {
 			printf(" (Hospital actualmente activo)");
 		}
 		printf("\n");
@@ -217,7 +216,7 @@ bool hospitales_activos(void *contexto)
 	return EXITO;
 }
 
-bool destruir_hospital(void *contexto)
+int destruir_hospital(void *contexto)
 {
 	struct hospitales *hospitales = contexto;
 	if (!hospitales)
@@ -266,7 +265,7 @@ bool destruir_hospital(void *contexto)
 	return EXITO;
 }
 
-bool activar_hospital(void *contexto)
+int activar_hospital(void *contexto)
 {
 	struct hospitales *hospitales = contexto;
 	if (!hospitales)
@@ -332,7 +331,9 @@ bool ejecutar_opcion(menu_t *menu, char desicion_usuario)
 
 	} else if (desicion_usuario == 'h' || desicion_usuario == 'H') {
 		printf("\n");
-		ayuda_usuario();
+		struct nodo *comando = hash_obtener(menu->comandos, "ayuda");
+		comando->funcion(menu->hospital_general);
+
 	} else if (desicion_usuario == 'c' || desicion_usuario == 'C') {
 		char nombre_hospital[50];
 		printf("Ingrese el nombre del archivo: ");
@@ -390,6 +391,8 @@ bool ejecutar_opcion(menu_t *menu, char desicion_usuario)
 			struct nodo *comando =
 				hash_obtener(menu->comandos, "destruir");
 			comando->funcion(menu->hospital_general);
+		} else if (menu->hospital_general->cant_hospitales == 0) {
+			printf("No hay ningun hospital disponible para destruir!");
 		}
 		printf("\n");
 	}
@@ -399,6 +402,9 @@ bool ejecutar_opcion(menu_t *menu, char desicion_usuario)
 
 hash_t *insertar_hash(hash_t *comandos)
 {
+	if (!comandos)
+		return NULL;
+
 	hash_insertar(comandos, "ayuda", NULL, NULL, ayuda_usuario);
 	hash_insertar(comandos, "estado", NULL, NULL, hospitales_activos);
 	hash_insertar(comandos, "activar", NULL, NULL, activar_hospital);

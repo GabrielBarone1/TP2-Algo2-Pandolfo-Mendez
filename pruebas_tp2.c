@@ -33,6 +33,8 @@ void pruebas_tp2()
 		crear_menu(NULL) == NULL,
 		"No se puede crear un menu con una estructura hospitales NULL");
 	menu_t *menu = crear_menu(hospitales);
+	pa2m_afirmar(insertar_hash(NULL) == NULL,
+		     "No se pueden insertar los comandos con un Hash NULL");
 	menu->hospital_general = hospitales;
 	pa2m_afirmar(menu != NULL, "Se crea el menu correctamente");
 	pa2m_afirmar(

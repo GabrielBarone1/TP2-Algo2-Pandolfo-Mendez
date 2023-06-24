@@ -15,7 +15,7 @@ int main()
 	comandos = insertar_hash(comandos);
 	menu_t *menu = crear_menu(hospitales);
 	menu->comandos = comandos;
-	if (!hospitales || !menu)
+	if (!hospitales || !menu || !comandos)
 		return ERROR;
 	printf("Bienvenido, ingrese una opcion valida, si no conoce los comandos presione 'H'\n");
 

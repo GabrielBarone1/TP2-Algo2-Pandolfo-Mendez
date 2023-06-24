@@ -9,7 +9,7 @@
 struct nodo {
 	char *clave;
 	void *valor;
-	bool (*funcion)(void *);
+	int (*funcion)(void *);
 	struct nodo *siguiente;
 
 } nodo_t;
@@ -83,7 +83,7 @@ hash_t *hash_crear(size_t capacidad)
 }
 
 hash_t *hash_insertar(hash_t *hash, const char *clave, void *elemento,
-		      void **anterior, bool (*funcion)(void *))
+		      void **anterior, int (*funcion)(void *))
 {
 	if (!hash || !clave)
 		return NULL;
