@@ -20,8 +20,7 @@ int ayuda_usuario(void *contexto);
 
 //Crea un hospital y lo agrega a la estructura global donde se guardan todos los hospitales.
 //Retorna -1 en caso de error o retorna 0 en caso de exito.
-int crear_hospital(struct hospitales *hospitales, int id_hospital,
-		   char nombre_hospital[50]);
+int crear_hospital(void *contexto);
 
 //Muestra todos los detalles de los pokemones almacenados en el hospital activo.
 //Retorna -1 en caso de error o retorna 0 en caso de exito.
@@ -49,7 +48,7 @@ bool ejecutar_opcion(menu_t *menu, char desicion_usuario);
 
 //Libera toda la memoria del programa.
 //Retorna -1 en caso de error o retorna 0 en caso de exito.
-int menu_liberar_memoria(struct hospitales *hospitales, menu_t *menu);
+int menu_liberar_memoria(void *contexto);
 
 //Recibe un hash de comandos e inserta todas las funciones que se van a usar con sus respectivas claves.
 //Devuelve el hash.

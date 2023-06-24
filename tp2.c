@@ -28,7 +28,8 @@ int main()
 		salir_programa = ejecutar_opcion(menu, menu->desicion_usuario);
 	}
 
-	menu_liberar_memoria(hospitales, menu);
+	struct nodo *comando = hash_obtener(menu->comandos, "memoria");
+	comando->funcion(menu);
 
 	return EXITO;
 }

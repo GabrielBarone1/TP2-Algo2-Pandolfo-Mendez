@@ -102,11 +102,16 @@ int ayuda_usuario(void *contexto)
 	return EXITO;
 }
 
-int crear_hospital(struct hospitales *hospitales, int id_hospital,
-		   char nombre_hospital[50])
+int crear_hospital(void *contexto)
 {
+	struct hospitales *hospitales = contexto;
+
 	if (!hospitales)
 		return ERROR;
+
+	char nombre_hospital[50];
+	printf("Ingrese el nombre del archivo (No ingrese un nombre con espacios!): ");
+	scanf(" %s", nombre_hospital);
 
 	hospital_t *hospital = hospital_crear_desde_archivo(nombre_hospital);
 	if (!hospital)
@@ -127,7 +132,7 @@ int crear_hospital(struct hospitales *hospitales, int id_hospital,
 	}
 
 	strcpy(hospital->nombre_archivo, nombre_hospital);
-	hospital->numero_id = id_hospital;
+	hospital->numero_id = hospitales->asignar_id_hospital;
 	hospitales->hospitales_creados[hospitales->cant_hospitales] = hospital;
 	hospitales->cant_hospitales++;
 
@@ -297,22 +302,27 @@ int activar_hospital(void *contexto)
 	return EXITO;
 }
 
-int menu_liberar_memoria(struct hospitales *hospitales, menu_t *menu)
+int menu_liberar_memoria(void *contexto)
 {
-	if (!hospitales || !menu)
+	menu_t *menu = contexto;
+
+	if (!menu)
 		return ERROR;
 
-	if (hospitales->cant_hospitales > 0) {
-		for (size_t i = 0; i < hospitales->cant_hospitales; i++) {
-			if (hospitales->hospitales_creados[i] != NULL) {
+	if (menu->hospital_general->cant_hospitales > 0) {
+		for (size_t i = 0; i < menu->hospital_general->cant_hospitales;
+		     i++) {
+			if (menu->hospital_general->hospitales_creados[i] !=
+			    NULL) {
 				hospital_destruir(
-					hospitales->hospitales_creados[i]);
+					menu->hospital_general
+						->hospitales_creados[i]);
 			}
 		}
 	}
 
-	free(hospitales->hospitales_creados);
-	free(hospitales);
+	free(menu->hospital_general->hospitales_creados);
+	free(menu->hospital_general);
 	hash_destruir(menu->comandos);
 	free(menu);
 
@@ -335,14 +345,8 @@ bool ejecutar_opcion(menu_t *menu, char desicion_usuario)
 		comando->funcion(menu->hospital_general);
 
 	} else if (desicion_usuario == 'c' || desicion_usuario == 'C') {
-		char nombre_hospital[50];
-		printf("Ingrese el nombre del archivo: ");
-		scanf(" %s", nombre_hospital);
-
-		int resultado_crear = crear_hospital(
-			menu->hospital_general,
-			menu->hospital_general->asignar_id_hospital,
-			nombre_hospital);
+		struct nodo *comando = hash_obtener(menu->comandos, "crear");
+		int resultado_crear = comando->funcion(menu->hospital_general);
 
 		if (resultado_crear == ERROR) {
 			printf("Hubo un error al cargar el archivo, asegurese que sea valido\n");
@@ -412,6 +416,8 @@ hash_t *insertar_hash(hash_t *comandos)
 	hash_insertar(comandos, "listar", NULL, NULL, lista_pokemones);
 	hash_insertar(comandos, "destruir", NULL, NULL, destruir_hospital);
 	hash_insertar(comandos, "menu", NULL, NULL, menu_usuario);
+	hash_insertar(comandos, "memoria", NULL, NULL, menu_liberar_memoria);
+	hash_insertar(comandos, "crear", NULL, NULL, crear_hospital);
 
 	return comandos;
 }
