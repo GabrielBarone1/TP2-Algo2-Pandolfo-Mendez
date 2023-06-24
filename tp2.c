@@ -11,6 +11,8 @@ int main()
 {
 	struct hospitales *hospitales = crear_hospital_general();
 	menu_t *menu = crear_menu(hospitales);
+	if (!hospitales || !menu)
+		return ERROR;
 	printf("Bienvenido, ingrese una opcion valida, si no conoce los comandos presione 'H'\n");
 
 	bool salir_programa = false;
