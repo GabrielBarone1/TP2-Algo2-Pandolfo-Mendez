@@ -13,10 +13,10 @@ struct hospitales *crear_hospital_general();
 
 //Muestra la interfaz del menu para que el usuario se guie como usar el programa.
 //Retorna -1 en caso de error o retorna 0 en caso de exito.
-int menu_usuario(struct hospitales *hospitales);
+bool menu_usuario(void *contexto);
 
 //Muestra todas las opciones disponibles detalladamente para que el usuario sepa como usar el programa.
-void ayuda_usuario();
+bool ayuda_usuario();
 
 //Crea un hospital y lo agrega a la estructura global donde se guardan todos los hospitales.
 //Retorna -1 en caso de error o retorna 0 en caso de exito.
@@ -25,23 +25,23 @@ int crear_hospital(struct hospitales *hospitales, int id_hospital,
 
 //Muestra todos los detalles de los pokemones almacenados en el hospital activo.
 //Retorna -1 en caso de error o retorna 0 en caso de exito.
-int lista_pokemones(struct hospitales *hospitales);
+bool lista_pokemones(void *contexto);
 
 //Muestra todos los nombres de los pokemones almacenados en el hospital activo.
 //Retorna -1 en caso de error o retorna 0 en caso de exito.
-int pokemones_en_hospital(struct hospitales *hospitales);
+bool pokemones_en_hospital(void *contexto);
 
 //Muestra todos los hospitales disponibles y el activo.
 //Retorna -1 en caso de error o retorna 0 en caso de exito.
-int hospitales_activos(struct hospitales *hospitales);
+bool hospitales_activos(void *contexto);
 
 //Destruye el hospital activo y le pregunta al usuario que hospital desea activar.
 //Retorna -1 en caso de error o retorna 0 en caso de exito.
-int destruir_hospital(struct hospitales *hospitales);
+bool destruir_hospital(void *contexto);
 
 //Activa el hospital que el usuario desee.
 //Retorna -1 en caso de error o retorna 0 en caso de exito.
-int activar_hospital(struct hospitales *hospitales);
+bool activar_hospital(void *contexto);
 
 //Ejecuta la opcion que el usuario eligio por pantalla, devuelve un booleano para determinar si
 //seguir o no con el programa.

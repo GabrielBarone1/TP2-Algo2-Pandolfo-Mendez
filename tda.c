@@ -5,6 +5,8 @@
 #include "src/tp1.c"
 #include "src/pokemon.h"
 #include "src/pokemon.c"
+#include "hash.h"
+#include "hash.c"
 
 #define ERROR -1
 #define EXITO 0
@@ -19,6 +21,7 @@ typedef struct hospitales {
 typedef struct menu {
 	char desicion_usuario;
 	struct hospitales *hospital_general;
+	hash_t *comandos;
 	bool programa_finalizado;
 } menu_t;
 
@@ -54,8 +57,10 @@ struct hospitales *crear_hospital_general()
 	return hospitales;
 }
 
-int menu_usuario(struct hospitales *hospitales)
+bool menu_usuario(void *contexto)
 {
+	struct hospitales *hospitales = contexto;
+
 	if (!hospitales)
 		return ERROR;
 
@@ -82,7 +87,7 @@ int menu_usuario(struct hospitales *hospitales)
 	return EXITO;
 }
 
-void ayuda_usuario()
+bool ayuda_usuario()
 {
 	printf("Los comandos disponibles son:\n");
 	printf("- H (ayuda/help): Muestra un menú de ayuda con los comandos disponibles.\n");
@@ -94,7 +99,7 @@ void ayuda_usuario()
 	printf("- D (destruir): Destruye el hospital activo.\n");
 	printf("- S (salir/exit): Sale del programa (obviamente que libera toda la memoria).\n");
 
-	return;
+	return true;
 }
 
 int crear_hospital(struct hospitales *hospitales, int id_hospital,
@@ -129,8 +134,10 @@ int crear_hospital(struct hospitales *hospitales, int id_hospital,
 	return EXITO;
 }
 
-int lista_pokemones(struct hospitales *hospitales)
+bool lista_pokemones(void *contexto)
 {
+	struct hospitales *hospitales = contexto;
+
 	if (!hospitales)
 		return ERROR;
 
@@ -163,8 +170,10 @@ int lista_pokemones(struct hospitales *hospitales)
 	return EXITO;
 }
 
-int pokemones_en_hospital(struct hospitales *hospitales)
+bool pokemones_en_hospital(void *contexto)
 {
+	struct hospitales *hospitales = contexto;
+
 	if (!hospitales)
 		return ERROR;
 
@@ -183,8 +192,10 @@ int pokemones_en_hospital(struct hospitales *hospitales)
 	return EXITO;
 }
 
-int hospitales_activos(struct hospitales *hospitales)
+bool hospitales_activos(void *contexto)
 {
+	struct hospitales *hospitales = contexto;
+
 	if (!hospitales)
 		return ERROR;
 
@@ -206,8 +217,9 @@ int hospitales_activos(struct hospitales *hospitales)
 	return EXITO;
 }
 
-int destruir_hospital(struct hospitales *hospitales)
+bool destruir_hospital(void *contexto)
 {
+	struct hospitales *hospitales = contexto;
 	if (!hospitales)
 		return ERROR;
 
@@ -254,8 +266,9 @@ int destruir_hospital(struct hospitales *hospitales)
 	return EXITO;
 }
 
-int activar_hospital(struct hospitales *hospitales)
+bool activar_hospital(void *contexto)
 {
+	struct hospitales *hospitales = contexto;
 	if (!hospitales)
 		return ERROR;
 
@@ -301,6 +314,7 @@ int menu_liberar_memoria(struct hospitales *hospitales, menu_t *menu)
 
 	free(hospitales->hospitales_creados);
 	free(hospitales);
+	hash_destruir(menu->comandos);
 	free(menu);
 
 	return EXITO;
@@ -339,34 +353,59 @@ bool ejecutar_opcion(menu_t *menu, char desicion_usuario)
 		if (menu->hospital_general->cant_hospitales == 0) {
 			printf("No hay ningun hospital cargado!\n");
 		} else if (menu->hospital_general->cant_hospitales > 0) {
-			hospitales_activos(menu->hospital_general);
+			struct nodo *comando =
+				hash_obtener(menu->comandos, "estado");
+			comando->funcion(menu->hospital_general);
 		}
 	} else if (desicion_usuario == 'a' || desicion_usuario == 'A') {
 		printf("\n");
 		if (menu->hospital_general->cant_hospitales > 0) {
-			activar_hospital(menu->hospital_general);
+			struct nodo *comando =
+				hash_obtener(menu->comandos, "activar");
+			comando->funcion(menu->hospital_general);
 		} else if (menu->hospital_general->cant_hospitales == 0) {
 			printf("No hay ningun hospital disponible para activar!\n");
 		}
 
 	} else if (desicion_usuario == 'm' || desicion_usuario == 'M') {
 		if (menu->hospital_general->cant_hospitales > 0) {
-			pokemones_en_hospital(menu->hospital_general);
+			struct nodo *comando =
+				hash_obtener(menu->comandos, "mostrar");
+			comando->funcion(menu->hospital_general);
 		} else if (menu->hospital_general->cant_hospitales == 0) {
 			printf("\n");
 			printf("No hay ningun hospital disponible para mostrar!\n");
 		}
 	} else if (desicion_usuario == 'l' || desicion_usuario == 'L') {
 		if (menu->hospital_general->cant_hospitales > 0) {
-			lista_pokemones(menu->hospital_general);
+			struct nodo *comando =
+				hash_obtener(menu->comandos, "listar");
+			comando->funcion(menu->hospital_general);
 		} else if (menu->hospital_general->cant_hospitales == 0) {
 			printf("\n");
 			printf("No hay ningun hospital disponible para mostrar!\n");
 		}
 	} else if (desicion_usuario == 'd' || desicion_usuario == 'D') {
-		destruir_hospital(menu->hospital_general);
+		if (menu->hospital_general->cant_hospitales > 0) {
+			struct nodo *comando =
+				hash_obtener(menu->comandos, "destruir");
+			comando->funcion(menu->hospital_general);
+		}
 		printf("\n");
 	}
 
 	return menu->programa_finalizado;
+}
+
+hash_t *insertar_hash(hash_t *comandos)
+{
+	hash_insertar(comandos, "ayuda", NULL, NULL, ayuda_usuario);
+	hash_insertar(comandos, "estado", NULL, NULL, hospitales_activos);
+	hash_insertar(comandos, "activar", NULL, NULL, activar_hospital);
+	hash_insertar(comandos, "mostrar", NULL, NULL, pokemones_en_hospital);
+	hash_insertar(comandos, "listar", NULL, NULL, lista_pokemones);
+	hash_insertar(comandos, "destruir", NULL, NULL, destruir_hospital);
+	hash_insertar(comandos, "menu", NULL, NULL, menu_usuario);
+
+	return comandos;
 }
