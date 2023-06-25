@@ -28,6 +28,8 @@ Funcionamiento del Programa
 
 Hospitales disponibles a probar en el programa: "ejemplos/grande.txt" y "ejemplos/hospital1.txt"
 
+ACLARACION: Al ingresar el nombre de un archivo, ingresarlo sin las comillas, ej: ingrese un nombre de archivo: ejemplos/grande.txt
+
 
 <div align="center">
 <img width="70%" src="https://github.com/GabrielBarone1/tp2-109694/assets/127968237/86290c6a-fe92-496a-af9d-fbfd5c6087ac">
