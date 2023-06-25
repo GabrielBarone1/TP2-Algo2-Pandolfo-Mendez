@@ -11,12 +11,25 @@
 int main()
 {
 	struct hospitales *hospitales = crear_hospital_general();
-	hash_t *comandos = hash_crear(10);
-	comandos = insertar_hash(comandos);
-	menu_t *menu = crear_menu(hospitales);
-	menu->comandos = comandos;
-	if (!hospitales || !menu || !comandos)
+	if (!hospitales)
 		return ERROR;
+
+	hash_t *comandos = hash_crear(10);
+	if (!comandos) {
+		free(hospitales);
+		return ERROR;
+	}
+	comandos = insertar_hash(comandos);
+
+	menu_t *menu = crear_menu(hospitales);
+	if (!menu) {
+		free(hospitales);
+		free(comandos);
+		return ERROR;
+	}
+
+	menu->comandos = comandos;
+
 	printf("Bienvenido, ingrese una opcion valida, si no conoce los comandos presione 'H'\n");
 
 	bool salir_programa = false;
