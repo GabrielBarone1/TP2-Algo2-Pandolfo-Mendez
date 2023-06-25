@@ -124,8 +124,6 @@ int crear_hospital(void *contexto)
 			hospitales->hospitales_creados,
 			sizeof(hospital_t) * (hospitales->cant_hospitales + 1));
 		if (hospitales_aux == NULL) {
-			free(hospitales->hospitales_creados);
-			free(hospitales);
 			return ERROR;
 		}
 		hospitales->hospitales_creados = hospitales_aux;
