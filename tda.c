@@ -246,7 +246,7 @@ int destruir_hospital(void *contexto)
 
 	if (hospitales->cant_hospitales > 0) {
 		while (id_encontrado == false) {
-			printf("Ingrese que hospital quiere activar: ");
+			printf("Ingrese un ID de hospital que quiere activar: ");
 			scanf(" %i", &valor_hospital);
 			for (size_t i = 0; i < hospitales->cant_hospitales;
 			     i++) {
@@ -279,7 +279,7 @@ int activar_hospital(void *contexto)
 	size_t nueva_posicion;
 
 	while (id_encontrado == false) {
-		printf("Ingrese que hospital quiere activar: ");
+		printf("Ingrese un ID de hospital que quiere activar: ");
 		scanf(" %i", &valor_hospital);
 		for (size_t i = 0; i < hospitales->cant_hospitales; i++) {
 			if (hospitales->hospitales_creados[i]->numero_id ==
