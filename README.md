@@ -20,7 +20,7 @@ gcc tp2.c -o programa
 
 - Para ejecutar con valgrind:
 ```bash
-valgrind ./programa
+valgrind --leak-check=full --track-origins=yes --show-reachable=yes --error-exitcode=2 --show-leak-kinds=all ./programa
 ```
 ---
 
